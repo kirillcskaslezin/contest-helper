@@ -7,7 +7,7 @@ from shutil import rmtree
 from string import ascii_lowercase
 from typing import Iterable, Any, Union, Callable, List, Set, Dict, Tuple, Type, TypeVar, Generic, NoReturn
 
-from easy_test import exceptions
+from contest_helper import exceptions
 
 # Type aliases for better code readability
 Number = Union[int, float]

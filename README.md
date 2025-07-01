@@ -13,19 +13,21 @@ A flexible framework for generating randomized test cases with input/output vali
 ## Installation
 
 ```bash
-pip install easy-test
+pip install contest-helper
 ```
 
 ## Quick Start
 
 ```python
-from easy_test import *
+from contest_helper import *
+
 
 # 1. Define your solution with validation
 def word_count(text: str) -> int:
     if len(text) > 1000:
         raise BadTestException("Input too long")
     return len(text.split())
+
 
 # 2. Configure generator
 generator = Generator(
