@@ -1,0 +1,158 @@
+{
+  "localizedNames": {},
+  "author": null,
+  "invocationLimits": null,
+  "testSets": {},
+  "perCompilerInvocationLimits": {},
+  "maxSourceSizeBytes": null,
+  "authorSolutionFile2CompilerId": {},
+  "checkerSettings": null,
+  "interactor": null,
+  "problemType": null,
+  "testFileType": null,
+  "generatorLaunchers": [],
+  "defaultLocale": null,
+  "fileSet": null,
+  "problemMetadata": {
+    "problemTypeMeta": "WITH_CHECKER",
+    "testFileType": "TEXT",
+    "shortName": "",
+    "defaultLocale": "ru",
+    "names": {
+      "ru": "Петли в графе"
+    },
+    "statements": [
+      {
+        "locale": "ru",
+        "type": "MARKDOWN",
+        "path": "statements/.html/ru/texstatement.html",
+        "rawStatement": {
+          "legend": "",
+          "inputFormat": "",
+          "outputFormat": "",
+          "notes": ""
+        }
+      }
+    ],
+    "fileSet": {
+      "inputFile": "",
+      "outputFile": "",
+      "redirectStdin": true,
+      "redirectStdout": true
+    },
+    "solutionLimits": {
+      "timeLimitMillis": 2000,
+      "idlenessLimitMillis": 2000,
+      "memoryLimit": 67108864,
+      "outputLimit": 67108864
+    },
+    "compilerGroupLimits": [],
+    "testSets": [
+      {
+        "name": "samples",
+        "inputFilePattern": "tests/sample{01-03}",
+        "answerFilePattern": "*.a",
+        "matchedTests": [
+          {
+            "inputPath": "tests/sample01",
+            "answerPath": "tests/sample01.a",
+            "inputExists": true,
+            "answerExists": true
+          }
+        ]
+      },
+      {
+        "name": "All tests",
+        "inputFilePattern": "tests/{01-}",
+        "answerFilePattern": "*.a",
+        "matchedTests": [
+          {
+            "inputPath": "tests/01",
+            "answerPath": "tests/01.a",
+            "inputExists": true,
+            "answerExists": true
+          },
+          {
+            "inputPath": "tests/02",
+            "answerPath": "tests/02.a",
+            "inputExists": true,
+            "answerExists": true
+          },
+          {
+            "inputPath": "tests/03",
+            "answerPath": "tests/03.a",
+            "inputExists": true,
+            "answerExists": true
+          }
+        ]
+      }
+    ],
+    "generators": [],
+    "generateTestCommands": [],
+    "solutions": [
+      {
+        "compilerId": "python-lyceum",
+        "sourcePath": "solution.py",
+        "comment": "",
+        "verdict": "OK",
+        "testNumber": 0
+      }
+    ],
+    "tags": [],
+    "includeForCompileFiles": [
+      "Makefile",
+      "build.sh",
+      "check.py"
+    ],
+    "includeForRunFiles": [],
+    "postProcessFiles": [
+      "postprocessor.py"
+    ],
+    "validators": [],
+    "htmlGeneratorType": "YA_CONTEST",
+    "compilationLimits": {
+      "timeLimitMillis": 60000,
+      "idlenessLimitMillis": 60000,
+      "memoryLimit": 1598029824,
+      "outputLimit": 100000000
+    },
+    "customCompilationLimits": [],
+    "fieldTypeMeta": "TEXT_OR_FILE",
+    "validation": {},
+    "parentProblemId": "",
+    "rootProblemId": "",
+    "problemCorrectAnswers": [],
+    "problemCompilers": {
+      "additionalCompilers": {}
+    },
+    "metaInfo": {
+      "maxScore": 1
+    },
+    "testDataTypeSettings": null,
+    "checkerSettings": {
+      "checkerType": "STANDARD",
+      "limits": {
+        "timeLimitMillis": 10000,
+        "idlenessLimitMillis": 10000,
+        "memoryLimit": 268435456,
+        "outputLimit": 268435456
+      },
+      "env": {},
+      "checkerFiles": null,
+      "compilerId": null,
+      "isScoring": null,
+      "checkerId": "cmp_file",
+      "eps": null,
+      "absolute": null
+    },
+    "interactorSettingsMeta": null,
+    "answerTypeMeta": null,
+    "pictureSettingsMeta": null,
+    "solutionTemplates": [],
+    "sectionVisibility": {
+      "showLimits": true,
+      "showIo": true,
+      "showSamples": true
+    }
+  }
+}
