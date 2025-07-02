@@ -37,7 +37,7 @@ This creates:
 2. Generating Test Cases
 
 ```python
-from contest_helper import *
+from contest_helper.basic import *
 
 
 # Define your solution with validation
