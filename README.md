@@ -1,6 +1,7 @@
 # Easy Random Test Case Generator Framework
 
-A flexible framework for generating randomized test cases with input/output validation, designed for competitive programming and algorithmic testing.
+A flexible framework for generating randomized test cases with input/output validation, designed for competitive
+programming and algorithmic testing.
 
 ## Features
 
@@ -18,29 +19,40 @@ pip install contest-helper
 
 ## Quick Start
 
+1. Using the CLI Tool
+
+Initialize a new problem directory:
+
+```bash
+ch-start-problem path/to/problem --language en --checker
+```
+
+This creates:
+
+- Problem statement (in specified language)
+- Test generator template
+- Metadata file
+- Optional checker script
+
+2. Generating Test Cases
+
 ```python
 from contest_helper import *
 
 
-# 1. Define your solution with validation
+# Define your solution with validation
 def word_count(text: str) -> int:
     if len(text) > 1000:
         raise BadTestException("Input too long")
     return len(text.split())
 
 
-# 2. Configure generator
-generator = Generator(
+# Configure and run generator
+Generator(
     solution=word_count,
     tests_generator=RandomSentence(min_length=1, max_length=20),
-    tests_count=10,
-    input_parser=lambda lines: ' '.join(lines),
-    input_printer=lambda text: [text],
-    output_printer=lambda count: [str(count)]
-)
-
-# 3. Generate tests
-generator.run()
+    tests_count=10
+).run()
 ```
 
 ## Core Components
@@ -66,7 +78,7 @@ def solution(input_data):
     # Validate input before processing
     if is_invalid(input_data):
         raise BadTestException("Validation failed")
-    
+
     # Normal processing...
 ```
 
@@ -101,7 +113,7 @@ dynamic_gen = RandomDict(
 class RandomGraph(Value[Dict]):
     def __init__(self, node_count: Value[int]):
         self.node_count = node_count
-    
+
     def __call__(self) -> Dict:
         nodes = [f"node{i}" for i in range(self.node_count())]
         return {
