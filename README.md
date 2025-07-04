@@ -19,7 +19,7 @@ pip install contest-helper
 
 ## Quick Start
 
-1. Using the CLI Tool
+1. Using the CLI Tool `ch-start-problem`
 
 Initialize a new problem directory:
 
@@ -53,6 +53,12 @@ Generator(
     tests_generator=RandomSentence(min_length=1, max_length=20),
     tests_count=10
 ).run()
+```
+
+3. Using the CLI Tool `ch-combine`
+
+```bash
+ch-combine my-prolem [options]
 ```
 
 ## Core Components
