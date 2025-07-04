@@ -19,7 +19,7 @@
     "shortName": "",
     "defaultLocale": "ru",
     "names": {
-      "ru": "Петли в графе"
+      "ru": "Untitled"
     },
     "statements": [
       {
@@ -50,64 +50,24 @@
     "testSets": [
       {
         "name": "samples",
-        "inputFilePattern": "tests/sample{01-03}",
+        "inputFilePattern": "tests/sample{01-}",
         "answerFilePattern": "*.a",
-        "matchedTests": [
-          {
-            "inputPath": "tests/sample01",
-            "answerPath": "tests/sample01.a",
-            "inputExists": true,
-            "answerExists": true
-          }
-        ]
+        "matchedTests": []
       },
       {
         "name": "All tests",
         "inputFilePattern": "tests/{01-}",
         "answerFilePattern": "*.a",
-        "matchedTests": [
-          {
-            "inputPath": "tests/01",
-            "answerPath": "tests/01.a",
-            "inputExists": true,
-            "answerExists": true
-          },
-          {
-            "inputPath": "tests/02",
-            "answerPath": "tests/02.a",
-            "inputExists": true,
-            "answerExists": true
-          },
-          {
-            "inputPath": "tests/03",
-            "answerPath": "tests/03.a",
-            "inputExists": true,
-            "answerExists": true
-          }
-        ]
+        "matchedTests": []
       }
     ],
     "generators": [],
     "generateTestCommands": [],
-    "solutions": [
-      {
-        "compilerId": "python-lyceum",
-        "sourcePath": "solution.py",
-        "comment": "",
-        "verdict": "OK",
-        "testNumber": 0
-      }
-    ],
+    "solutions": [],
     "tags": [],
-    "includeForCompileFiles": [
-      "Makefile",
-      "build.sh",
-      "check.py"
-    ],
+    "includeForCompileFiles": [],
     "includeForRunFiles": [],
-    "postProcessFiles": [
-      "postprocessor.py"
-    ],
+    "postProcessFiles": [],
     "validators": [],
     "htmlGeneratorType": "YA_CONTEST",
     "compilationLimits": {
