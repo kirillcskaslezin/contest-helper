@@ -1,3 +1,4 @@
+import logging
 import random as rd
 import subprocess
 from itertools import chain
@@ -770,6 +771,18 @@ class Generator(Generic[Input, Output]):
         self._input_printer_ = input_printer
         self._output_printer_ = output_printer
 
+        # Set up logger for this class
+        self.logger = logging.getLogger(self.__class__.__name__)
+        self.logger.setLevel(logging.INFO)
+
+        if not self.logger.handlers:
+            handler = logging.StreamHandler()
+            formatter = logging.Formatter(
+                '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+            )
+            handler.setFormatter(formatter)
+            self.logger.addHandler(handler)
+
     def run(self):
         """Executes the test generation pipeline with automatic validation.
 
@@ -785,35 +798,86 @@ class Generator(Generic[Input, Output]):
             ValueError: If input cannot be parsed
             Exception: Any exceptions other than BadTestException from solution
         """
-        if isdir('tests'):
-            rmtree('tests')
-        mkdir('tests')
-        tests = []
+        try:
+            self.logger.info("Starting test generation process")
 
-        # Process sample files (no validation)
-        for index, sample in enumerate(self._samples_ or tuple(), 1):
-            with open(sample, 'r', encoding='utf-8') as file:
-                data = self._input_parser_(file)
-                result = self._solution_(data)
-                tests.append((f'sample{index:02}', data, result))
+            # Handle test directory
+            if isdir('tests'):
+                self.logger.info("Clearing existing test directory")
+                rmtree('tests')
+            mkdir('tests')
+            self.logger.info("Created fresh test directory")
 
-        # Generate and validate random tests
-        for index in range(1, self._tests_count_ + 1):
-            bad_test = True
-            while bad_test:
+            tests = []
+            sample_count = len(self._samples_ or [])
+
+            # Process sample files
+            self.logger.info(f"Processing {sample_count} sample files")
+            for index, sample in enumerate(self._samples_ or tuple(), 1):
                 try:
-                    bad_test = False
-                    data = self._tests_generator_()
-                    result = self._solution_(data)
-                    tests.append((f'{index:02}', data, result))
-                except exceptions.BadTestException:
-                    bad_test = True
+                    with open(sample, 'r', encoding='utf-8') as file:
+                        self.logger.debug(f"Parsing sample file: {sample}")
+                        data = self._input_parser_(file)
+                        result = self._solution_(data)
+                        tests.append((f'sample{index:02}', data, result))
+                        self.logger.debug(f"Successfully processed sample {index}")
+                except Exception as e:
+                    self.logger.error(f"Failed to process sample {sample}: {str(e)}")
+                    raise
 
-        # Save all valid test cases
-        for filename, data, result in tests:
-            with open(f'tests/{filename}', 'w', encoding='utf-8', newline='\n') as file:
-                for line in self._input_printer_(data):
-                    print(line, file=file)
-            with open(f'tests/{filename}.a', 'w', encoding='utf-8', newline='\n') as file:
-                for line in self._output_printer_(result):
-                    print(line, file=file)
+            # Generate and validate random tests
+            self.logger.info(f"Generating {self._tests_count_} random test cases")
+            for index in range(1, self._tests_count_ + 1):
+                bad_test = True
+                retry_count = 0
+
+                while bad_test:
+                    try:
+                        retry_count += 1
+                        self.logger.debug(f"Generating test case {index} (attempt {retry_count})")
+                        data = self._tests_generator_()
+
+                        self.logger.debug("Validating generated test case")
+                        result = self._solution_(data)
+
+                        tests.append((f'{index:02}', data, result))
+                        bad_test = False
+                        self.logger.info(f"Successfully generated test case {index}")
+
+                    except exceptions.BadTestException as e:
+                        self.logger.warning(
+                            f"Invalid test case generated for test {index}: {str(e)}. Retrying..."
+                        )
+                    except Exception as e:
+                        self.logger.error(
+                            f"Unexpected error generating test case {index}: {str(e)}"
+                        )
+                        raise
+
+            # Save all test cases
+            self.logger.info(f"Saving {len(tests)} test cases to disk")
+            for filename, data, result in tests:
+                try:
+                    # Save input file
+                    input_path = f'tests/{filename}'
+                    with open(input_path, 'w', encoding='utf-8', newline='\n') as file:
+                        for line in self._input_printer_(data):
+                            print(line, file=file)
+                    self.logger.debug(f"Saved input file: {input_path}")
+
+                    # Save output file
+                    output_path = f'tests/{filename}.a'
+                    with open(output_path, 'w', encoding='utf-8', newline='\n') as file:
+                        for line in self._output_printer_(result):
+                            print(line, file=file)
+                    self.logger.debug(f"Saved output file: {output_path}")
+
+                except Exception as e:
+                    self.logger.error(f"Failed to save test case {filename}: {str(e)}")
+                    raise
+
+            self.logger.info("Test generation completed successfully")
+
+        except Exception as e:
+            self.logger.critical(f"Test generation failed: {str(e)}", exc_info=True)
+            raise
