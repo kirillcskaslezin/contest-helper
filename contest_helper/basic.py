@@ -731,6 +731,7 @@ class Generator(Generic[Input, Output]):
         self.file_manager = TestFileManager(self.io, self.logger)
 
         # Store configuration
+        self.solution = solution
         self.samples = samples or []
         self.tests_generator = tests_generator
         self.tests_count = tests_count
