@@ -128,11 +128,11 @@ class RandomValue(Value[T]):
         return rd.choice(self._sequence_)
 
 
-class RandomNumber(RandomValue[T]):
+class RandomNumber(Value[T]):
     """Generates random numbers within a specified range with a fixed step size.
 
-    Creates a sequence of numbers following start/stop/step parameters and provides
-    uniform random selection from this sequence. Supports both integer and float ranges.
+    Creates random numbers following start/stop/step parameters without generating
+    the entire sequence upfront. Supports both integer and float ranges.
 
     Example:
         >>> rand_int = RandomNumber(1, 10)  # Integers 1 through 9
@@ -144,22 +144,58 @@ class RandomNumber(RandomValue[T]):
     Args:
         start: Inclusive lower bound of the range
         stop: Exclusive upper bound of the range
-        step: Interval between numbers (default: 1)
+        step: Interval between numbers (must be positive)
 
-    Note:
-        - The stop value is never included (similar to range())
-        - For floating-point ranges, be aware of potential rounding errors
-        - The sequence is generated once during initialization
+    Raises:
+        ValueError: If parameters form an invalid range
     """
 
     def __init__(self, start: T, stop: T, step: T = 1):
-        """Initialize the number sequence generator."""
-        sequence = []
-        value = start
-        while value < stop:
-            sequence.append(value)
-            value += step
-        super().__init__(sequence)
+        """Initialize and validate the number generator."""
+        super().__init__(None)
+
+        # Validate parameters
+        if step <= 0:
+            raise ValueError(f"Step must be positive, got {step}")
+        if start >= stop:
+            raise ValueError(f"Invalid range: start ({start}) >= stop ({stop})")
+
+        self._start = start
+        self._stop = stop
+        self._step = step
+
+        # Calculate number of possible values
+        if isinstance(start, int) and isinstance(stop, int) and isinstance(step, int):
+            self._discrete = True
+            self._num_values = (stop - start) // step
+            if (stop - start) % step != 0:
+                self._num_values += 1
+        else:
+            self._discrete = False
+            self._num_values = int((stop - start) / step)
+            # Handle floating point imprecision
+            if (stop - start) % step != 0:
+                self._num_values += 1
+
+        if self._num_values <= 0:
+            raise ValueError(f"Invalid range: no values between {start} and {stop} with step {step}")
+
+    def __call__(self) -> T:
+        """Generate a new random number within the configured range.
+
+        Returns:
+            A randomly chosen number from the range.
+        """
+        if self._discrete:
+            # For integers, use randrange which is more efficient
+            random_index = rd.randrange(0, self._num_values)
+            return self._start + random_index * self._step
+        else:
+            # For floats, calculate a random value directly
+            random_steps = rd.randint(0, self._num_values - 1)
+            result = self._start + random_steps * self._step
+            # Handle potential floating point rounding errors
+            return min(result, self._stop - self._step / 2)
 
 
 class RandomWord(RandomValue[str]):
