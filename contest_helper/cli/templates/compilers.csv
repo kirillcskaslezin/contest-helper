@@ -1,0 +1,206 @@
+ID,Name
+fbc,Free Basic 1.04
+test_compiler,test compiler
+c11,GNU c11 4.9
+c11_x86,c 11 x32 4.9
+clang_c11,Сlang c11 3.8
+gcc14_c23,C23 (GCC 14.1)
+gcc7_c11,GNU GCC 7.3 C11
+gcc_c17,C17 (GCC 14.1)
+plain_c,GNU c 4.9
+plain_c_x32,GNU c x32 4.9
+dotnet5_asp,C# (MS .NET 5.0 + ASP)
+dotnet6_asp,C# (MS .NET 6.0 + ASP)
+dotnet8,C# (.NET 8.0)
+dotnet_asp,C# (MS .Net Core 3.1) + ASP.NET Core
+mono_csharp,Mono C# 5.2.0
+shagraev_csc,C# (MS .Net Core 3.1)
+clang11_cpp20,Clang11 C++20 (-O0)
+clang14_cpp20,C++20 (Clang 18.1.6)
+clang18_cpp23,C++23 (Clang 18.1.6)
+clang_cxx11,Clang cxx11 3.8
+gcc,GNU c++ 4.9
+gcc0x,GNU c++ 11 4.9
+gcc0x_x32,GNU c++ 11 x32 4.9
+gcc14_cpp23,C++23 (GCC 14.1)
+gcc5_x64,gcc5_x64
+gcc7.3-thread,gcc7.3-thread
+gcc7_3,GNU c++17 7.3
+gcc7_o0,GNU C++17 7.3 (-O0)
+gcc_cpp20,C++20 (GCC 14.1)
+gcc_docker,GCC 5.4.0 C++14
+gcc_docker2,GCC  C++17
+gcc_x32,GNU c++ x32 4.9
+gnuc14,GNU c++ 14 4.9
+dmd,dmd
+gdc,GDC 4.9
+gdc_docker,GDC 14.2.0
+dart-3_7,Dart 3.7.2
+dart_2_14,Dart 2.19.2
+dart_3,Dart 3.5.1
+gc,gc go
+gccgo,gcc go
+golang-1_24,Go 1.24.2
+golang_docker,Go 1.23.0
+haskell,Haskell 7.10.2
+java7,Oracle Java 7
+java7_x32,Oracle Java 7 x32
+java8,Oracle Java 8
+java8_for_max42,java8_for_max42
+java8_x32,java8_x32
+javac,Oracle Java 8 (48ML)
+javac_x32,Oracle Java 7 x 32 (48ML)
+jdk17,Java 17 (Temurin JDK)
+jdk19,Java 19 (Temurin JDK)
+jdk20,Java 20 (Temurin JDK)
+jdk21,Java 21 (Temurin JDK)
+jdk22,Java 22 (Temurin JDK)
+jdk23,Java 23 (Temurin JDK)
+openjdk11_x64,OpenJDK Java 11
+openjdk15,OpenJDK Java 15
+openjdk6_x32,OpenJDK Java 6 x32
+openjdk7_x64,OpenJDK Java 7 x64
+node12_mocha,Mocha (Node.js 12)
+node8_16,Node JS 8.16
+nodejs,Node JS 0.10.28
+nodejs692,Node JS 6.9.2
+nodejs_16,Node.js 16.17.0
+nodejs_18,Node.js 18.16.0
+nodejs_20,Node.js 20.14.0
+nodejs_22,Node.js 22.14.0
+nodejs_jest,nodejs_jest
+nodejs_new,Node.js 14.15.5
+typescript-5_8,TypeScript 5.8.3
+typescript5,TypeScript 5.4.5
+kotlin,Kotlin 1.1.50 (JRE 1.8.0)
+kotlin_1_3_50,Kotlin 1.3.50 (JRE 1.8.0)
+kotlin_1_4_0,Kotlin 1.4.30 (JRE 11)
+kotlin_1_5_0,Kotlin 1.5.32 (JRE 11)
+kotlin_1_8_0,Kotlin 1.8.0 (JRE 11)
+kotlin_1_9,Kotlin 1.9.21 (JRE 21)
+kotlin_2_0,Kotlin 2.0.10 (JRE 21)
+kotlin_2_1,Kotlin 2.1.20 (JRE 21)
+kumir,kumir 2.1.0-rc9
+lua_5_4,Lua 5.4
+aidao2024,(make) aidao2024
+aidao2024f,(make) aidao2024f
+cpp-make2,(make) C++
+cpp20-make,(Make) Clang11 C++20
+cpp20-make-clang14,(Make) Clang 17.0.1 C++20
+dart_make,(make) Dart 3.7.2
+dotnet,(Make) C# (MS .Net Core 3.1)
+dotnet5,(Make) C# (MS .Net Core 5.0)
+dotnet6,(Make) C# (MS .Net Core 6.0)
+dotnet8_make,(make) C# (.NET 8.0)
+gcc_c17_make,(make) C17 (GCC 14.1)
+gcc_cpp20_json_make,(make) GNU GCC 13.1 C++20 + JSON
+gcc_cpp20_make,(make) C++20 (GCC 14.1)
+gcc_docker2_make,(make) GCC  C++17
+go-lyceum,(make) Lyceum Go
+golang_docker_make,(make) Go 1.23.0
+idao,(make) idao
+idao2020,(make) idao2020
+idao2021,(make) idao2021
+idao2021_final,(make) idao2021 final
+idao2022,(make) idao2022
+idao2022_final,(make) idao2022 final
+ipython3,(make) ipython3
+ipython3v2,(make) ipython3v2
+java17_json_make,(make) Java 17 (Temurin JDK) + JSON
+javatest,(make) java test
+jdk17_make,(make) Java 17 (Temurin JDK)
+jdk21_make,(make) Java 21 (Temurin JDK)
+js-blitz,(make) js-blitz
+kotlin_1_9_make,(make) Kotlin 1.9.21 (JRE 21)
+kotlin_2_0_extended_make,(make) Kotlin 2.0.10 + JSON
+kotlin_2_0_make,(make) Kotlin 2.0.10 (JRE 21)
+kotlin_make,(make) Kotlin 1.8.0 (JRE 11)
+lyceum-ytsarurus,(make) lyceum-ytsarurus
+lyceum-ytsarurus-test,(make) lyceum-ytsarurus-test
+lyceum_go_test,(make) Lyceum Go Test
+lyceum_python_test,(make) Lyceum Python Test
+make,Make
+make2,make2
+mlblitz_python27_numpy,(make) python2.7+numpy
+mlblitz_python36_numpy,(make) python3.5+numpy
+nodejs22_chromium,(make) Node.js 22.14 + Chrome 135
+nodejs_16_make,(make) Node.js 16.17.0
+nodejs_18_make,(make) Node.js 18.16.0
+nodejs_20_chromium,(make) Node.js 20.14.0 + Chrome 125
+nodejs_20_make,(make) Node.js 20.14.0
+nodejs_chromium,(make) Node.js 18.16.0 + Chromium
+nodejs_make,(make) nodejs 6.9.2
+pascal_make,(make) Pascal
+postgres,(make) postgres
+pypy_make,(make) Python 3.11 (PyPy 7.3.19)
+python-handbook,(make) python-handbook
+python-lyceum,(make) python-lyceum
+python3_7,(make) Python 3.7.3+modules
+python3_aiohttp_make,(make) Python 3.11 + aiohttp
+python3_docker_make,(make) Python 3.12.3
+python_docker_make,(make) python_docker_make
+ros,(make) ROS 2 Jazzy
+rust_make,(make) Rust 1.80.1
+swift-5_3_make,(make) Swift 5.10.1
+tex,(make) tex
+tmp_py,(make) tmp_py
+ycupml2021,YCup ML 2021
+ocaml4,ocaml 4.02.3
+clang_objc_arc,Clang objc arc 3.8
+clang_objc_gc,Сlang objc gc 3.8
+dcc,Delphi (FPC 3.2.2)
+fpc,Free pascal 2.4.4
+fpc26,Free Pascal 2.6.2
+fpc30,Free Pascal 3.2.2
+pascal_abc,PascalABC.NET 3.9.0
+pascalabc,PascalABC.NET 3.5.1
+perl,Perl 5.14
+php,PHP 5.3.10
+php7_3_5,PHP 7.3.5
+php8_1,PHP 8.1
+pypy3_7_1_0,Python 3.11 (PyPy 7.3.19)
+pypy4,Python 2.7 (PyPy 4.0.0)
+python2_6,Python 2.7
+python3,Python 3.2
+python3_13,Python 3.13.2
+python3_4,Python 3.4.3
+python3_6,Python 3.6
+python3_7_3,Python 3.7.3
+python3_docker,Python 3.12.3
+r_core,R 2.14.1
+r_modules,R 3.6.3 + Modules
+ruby,Ruby 1.9.3
+ruby2,Ruby 2.2.3
+rust,Rust 1.2
+rust-1_39_0,Rust 1.39.0
+rust154,Rust 1.80.1
+scala,Scala 2.9.1
+scala_docker,Scala 2.13.4
+bash,GNU bash 4.2.24
+bash_docker,Bash 5.2.21
+data-analysis-handbook,Python 3.8 (Handbook DS)
+gcc_cpp20_json,GNU GCC 13.1 C++20 + JSON
+gnu c++ 14,(special) gnu c++ 14
+happyfat,(TESTING) don't use
+hf,(special) Testing Compiler
+java17_json,Java 17 (Temurin JDK) + JSON
+mlblitz,python3.6+numpy+pandas
+mlblitz_python26_numpy,(make) yandexdataschool
+mono_csharp_5,(special) Mono C# 5
+nodejs make,(make) nodejs (don't use)
+python3-ml,(make) python3-ml
+python3_11_aiohttp,Python 3.11 + aiohttp
+python3_7_ml_modules,Python 3.7.3 ML
+r-ml,(make) r-ml
+screenshots,screenshots
+screenshots-checker,screenshots-checker
+shagraev,Python 3.7 + network + requests
+shagraev_cpp,GNU c++ 11 + net + curl + json
+shagraev_go,Golang 1.14.4 + network
+shagraev_java,Java 8 + network + json-simple
+tmp_gcc_coursera,g++17 7.3 controlled
+ysda-ml,(make) ysda-ml
+sqlite3,SQLite 3.31.1
+swift,Swift 4.1.1
+swift-5_1,Swift 5.10.1
+swift-6_1,Swift 6.1
