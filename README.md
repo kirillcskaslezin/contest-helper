@@ -291,6 +291,49 @@ generator = Generator(
 generator.run()
 ```
 
+## Compiler Search Utility
+
+The `ch-compilers` command allows you to search through available compilers and development tools. It supports flexible name matching and displays results in an easy-to-read table format.
+
+### Basic Usage
+
+```bash
+ch-compilers <query>
+```
+
+### Examples
+
+1. Search for Python compilers:
+   ```bash
+   ch-compilers python
+   ```
+
+2. Search for Java compilers (case insensitive):
+   ```bash
+   ch-compilers java
+   ```
+
+3. Search with a custom CSV data file:
+   ```bash
+   ch-compilers "c++"
+   ```
+
+### Expected Output
+
+```
+Found 3 matches for 'python':
+
++----+----------------+------------------------------------+
+| #  | ID             | Name                               |
++====+================+====================================+
+| 1  | python3_13     | Python 3.13.2                      |
++----+----------------+------------------------------------+
+| 2  | pypy3_7_1_0    | Python 3.11 (PyPy 7.3.19)          |
++----+----------------+------------------------------------+
+| 3  | python2_6      | Python 2.7                         |
++----+----------------+------------------------------------+
+```
+
 
 ## Advanced Features
 
