@@ -334,6 +334,85 @@ Found 3 matches for 'python':
 +----+----------------+------------------------------------+
 ```
 
+## Automated Testing Utility
+
+The `ch-test` command provides comprehensive automated testing capabilities for competitive programming solutions.
+
+### Key Features
+
+- **Multi-format support**: Tests binary executables and interpreted scripts
+- **Flexible execution**: Handles C/C++/Rust/Go binaries and Python/Bash scripts
+- **Smart test discovery**: Automatically pairs input files with expected outputs
+- **Custom validation**: Supports both direct comparison and checker programs
+- **Detailed reporting**: Provides test-by-test results and summary statistics
+
+### Basic Usage
+
+```bash
+ch-test ./solution [options]
+```
+
+### Common Options
+
+| Option        | Description                          | Example                      |
+|---------------|--------------------------------------|------------------------------|
+| `-c`/`--checker` | Path to custom checker program     | `ch-test ./sol -c ./checker` |
+| `-i`/`--interpreter` | Specify script interpreter      | `ch-test sol.py -i python3`  |
+| `-t`/`--timeout` | Set execution timeout (seconds)  | `ch-test ./sol -t 5`         |
+
+### Test File Structure
+
+Organize tests in a `tests` directory with pairs of:
+- Input files (any name without `.a` extension)
+- Output files (same name with `.a` extension)
+
+Example:
+```
+tests/
+├── 001       # Test input
+├── 001.a     # Expected output
+├── 002       # Another test
+└── 002.a     # Its expected output
+```
+
+### Execution Examples
+
+1. **Test a C++ binary**:
+```bash
+ch-test ./solution_cpp
+```
+
+2. **Test a Python script**:
+```bash
+ch-test solution.py -i python3
+```
+
+3. **With custom checker**:
+```bash
+ch-test ./solution -c ./checker -t 3
+```
+
+4. **Test a Bash script**:
+```bash
+ch-test script.sh -i bash
+```
+
+### Output Format
+
+```
+[timestamp] INFO - Executing: 001
+[timestamp] INFO - Result: PASSED (exact match)
+[timestamp] ERROR - Result: FAILED
+Expected: 42
+Actual: 43
+
+=== Test Execution Summary ===
+Total tests run:      5
+Passed:               3
+Failed:               1
+Execution errors:     1
+Success rate:    60.00%
+```
 
 ## Advanced Features
 
