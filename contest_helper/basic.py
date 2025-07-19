@@ -10,10 +10,10 @@ from contest_helper import exceptions
 
 # Type aliases for better code readability
 Number = Union[int, float]  # Numeric type that can be either int or float
-Input = TypeVar('Input')    # Generic type for input data
+Input = TypeVar('Input')  # Generic type for input data
 Output = TypeVar('Output')  # Generic type for output data
-K = TypeVar('K')           # Key type for dictionaries
-T = TypeVar('T')           # Generic type for values
+K = TypeVar('K')  # Key type for dictionaries
+T = TypeVar('T')  # Generic type for values
 
 
 class Value(Generic[T]):
@@ -593,17 +593,21 @@ class TestCaseGenerator:
             try:
                 retry_count += 1
                 self.logger.debug(f"Generating test case (attempt {retry_count})" +
-                                 (f" for group '{group_name}'" if group_name else ""))
+                                  (f" for group '{group_name}'" if group_name else ""))
 
                 data = generator()
                 result = self.solution(data)
 
                 self.logger.info(f"Successfully generated test case" +
-                               (f" for group '{group_name}'" if group_name else ""))
+                                 (f" for group '{group_name}'" if group_name else ""))
                 return data, result
 
             except exceptions.BadTestException as e:
-                self.logger.warning(f"Invalid test case generated: {str(e)}. Retrying...")
+                self.logger.warning(
+                    f"Invalid test case generated" +
+                    (f" for group '{group_name}'" if group_name else "") +
+                    f": {str(e)}. Retrying..."
+                )
             except Exception as e:
                 self.logger.error(f"Unexpected error generating test case: {str(e)}")
                 raise
