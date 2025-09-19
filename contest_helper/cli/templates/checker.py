@@ -33,7 +33,7 @@ def parse_pattern(file):
     """
     Parse expected output file.
     """
-    return parse_input(file)
+    return parse_output(file)
 
 
 def check(input_data, output_data, pattern_data):
