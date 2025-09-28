@@ -25,6 +25,10 @@ def output_printer(data: Output) -> NoReturn:
     ...
 
 
+def validator(input_data: Input, output_data: Output) -> bool:
+    return True
+
+
 generator = Generator(
     solution=solution,
     samples=[],
@@ -33,6 +37,7 @@ generator = Generator(
     input_parser=input_parser,
     input_printer=input_printer,
     output_printer=output_printer,
+    validator=validator
 )
 
 generator.run()
