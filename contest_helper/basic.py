@@ -565,15 +565,17 @@ class IOPipeline:
 class TestCaseGenerator:
     """Generates and validates individual test cases."""
 
-    def __init__(self, solution: Callable, logger: logging.Logger):
+    def __init__(self, solution: Callable, logger: logging.Logger, validator: Callable[[Any, Any], bool] = None):
         """Initialize with solution function and logger.
 
         Args:
             solution: Reference implementation for validation
             logger: Configured logger for messaging
+            validator: Callable that returns True for valid (data, result) pairs; defaults to accept all
         """
         self.solution = solution
         self.logger = logger
+        self.validator = validator or (lambda _data, _result: True)
 
     def generate_case(self, generator: Callable, group_name: str = None) -> Tuple[Any, Any]:
         """Generate and validate a single test case.
@@ -597,6 +599,10 @@ class TestCaseGenerator:
 
                 data = generator()
                 result = self.solution(data)
+
+                # Validate generated test case if validator is provided (defaults to accept all)
+                if not self.validator(data, result):
+                    raise exceptions.BadTestException("Validation failed for generated test case")
 
                 self.logger.info(f"Successfully generated test case" +
                                  (f" for group '{group_name}'" if group_name else ""))
@@ -715,6 +721,7 @@ class Generator(Generic[Input, Output]):
             input_parser: Callable[[Iterable[str]], Input] = None,
             input_printer: Callable[[Input], Iterable[str]] = None,
             output_printer: Callable[[Output], Iterable[str]] = None,
+            validator: Callable[[Input, Output], bool] = None,
     ):
         """Initialize the test generator with configuration.
 
@@ -726,11 +733,12 @@ class Generator(Generic[Input, Output]):
             input_parser: Converts input lines to program input
             input_printer: Converts program input to text lines
             output_printer: Formats program output as text lines
+            validator: Function to validate generated (input, output); defaults to accepting all
         """
         # Initialize components
         self.io = IOPipeline(input_parser, input_printer, output_printer)
         self.logger = self._setup_logger()
-        self.case_generator = TestCaseGenerator(solution, self.logger)
+        self.case_generator = TestCaseGenerator(solution, self.logger, validator)
         self.group_manager = TestGroupManager(self.logger)
         self.file_manager = TestFileManager(self.io, self.logger)
 
