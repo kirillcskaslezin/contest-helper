@@ -5,6 +5,19 @@ from os.path import isdir
 from shutil import rmtree
 from string import ascii_lowercase
 from typing import Iterable, Any, Union, Callable, List, Set, Dict, Tuple, TypeVar, Generic
+from dataclasses import dataclass
+
+# Container for sample input data
+@dataclass
+class SampleData:
+    """Container for sample inputs that preserves original text and parsed form.
+
+    Attributes:
+        raw_lines: The original lines read from the user's sample file (without trailing newlines).
+        parsed: The parsed representation passed to the solution/validator.
+    """
+    raw_lines: List[str]
+    parsed: Any
 
 from contest_helper import exceptions
 
@@ -690,8 +703,13 @@ class TestFileManager:
         try:
             # Save input file
             with open(f'tests/{filename}', 'w', encoding='utf-8', newline='\n') as f:
-                for line in self.io.input_printer(data):
-                    print(line, file=f)
+                # For sample-based tests, write the original user-provided text as-is
+                if isinstance(data, SampleData):
+                    for line in data.raw_lines:
+                        print(line, file=f)
+                else:
+                    for line in self.io.input_printer(data):
+                        print(line, file=f)
 
             # Save output file
             with open(f'tests/{filename}.a', 'w', encoding='utf-8', newline='\n') as f:
@@ -780,9 +798,10 @@ class Generator(Generic[Input, Output]):
         for index, sample_file in enumerate(self.samples, 1):
             try:
                 with open(sample_file, 'r', encoding='utf-8') as f:
-                    data = self.io.input_parser(f)
-                    result = self.solution(data)
-                    samples.append((f'sample{index:02}', data, result))
+                    raw_lines = [line.rstrip('\n') for line in f]
+                    parsed = self.io.input_parser(raw_lines)
+                    result = self.solution(parsed)
+                    samples.append((f'sample{index:02}', SampleData(raw_lines, parsed), result))
             except Exception as e:
                 self.logger.error(f"Failed to process sample {sample_file}: {str(e)}")
                 raise
