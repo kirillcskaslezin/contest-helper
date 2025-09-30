@@ -27,17 +27,22 @@ def main():
 
         # Sort tests by name for consistent processing
         tests.sort(key=lambda x: x["testName"])
-        tests_count = len(tests)
 
-        # Filter out duplicate test names and sample tests, then collect verdicts
-        tests_statuses = [
-            tests[i]["verdict"] == "ok"
-            for i in range(tests_count)
-            if (
-                    (i == 0 or tests[i]["testName"] != tests[i - 1]["testName"])
-                    and tests[i]["testsetName"] != 'samples'
-            )
-        ]
+        # Build a filtered list: exclude samples and duplicate test names
+        filtered = []
+        seen_names = set()
+        for t in tests:
+            if t["testsetName"] == 'samples':
+                continue
+            name = t["testName"]
+            if name in seen_names:
+                continue
+            seen_names.add(name)
+            filtered.append(t)
+
+        # Recompute totals based on the filtered set
+        tests_count = len(filtered)
+        tests_statuses = [t["verdict"] == "ok" for t in filtered]
 
         passed_tests_count = sum(tests_statuses)
 
@@ -49,7 +54,7 @@ def main():
                 # Group-based scoring logic
                 mark = 0
                 for n in GROUPS:
-                    if all(tests[:n]):
+                    if all(tests_statuses[:n]):
                         mark = round(MAX_VALUE * n / tests_count)
                     else:
                         break
