@@ -397,15 +397,27 @@ def update_file_categories(meta, kwargs):
             - post_files: Post-processing files
     """
     if kwargs.get('compile_files'):
+        # Clear existing compile files list before assigning new one
+        if 'includeForCompileFiles' in meta['problemMetadata']:
+            logging.debug("Clearing old includeForCompileFiles before adding new compile files")
+            meta['problemMetadata']['includeForCompileFiles'] = []
         meta['problemMetadata']['includeForCompileFiles'] = kwargs['compile_files']
         logging.debug(f"Added compile files: {kwargs['compile_files']}")
 
     if kwargs.get('run_files'):
+        # Clear existing run files list before assigning new one
+        if 'includeForRunFiles' in meta['problemMetadata']:
+            logging.debug("Clearing old includeForRunFiles before adding new run files")
+            meta['problemMetadata']['includeForRunFiles'] = []
         meta['problemMetadata']['includeForRunFiles'] = kwargs['run_files']
         logging.debug(f"Added run files: {kwargs['run_files']}")
 
     if kwargs.get('post_files'):
+        # Clear existing postProcessFiles list before extending with new files
         if 'postProcessFiles' not in meta['problemMetadata']:
+            meta['problemMetadata']['postProcessFiles'] = []
+        else:
+            logging.debug("Clearing old postProcessFiles before adding new post-processing files")
             meta['problemMetadata']['postProcessFiles'] = []
         meta['problemMetadata']['postProcessFiles'].extend(kwargs['post_files'])
         logging.debug(f"Added post-processing files: {kwargs['post_files']}")
