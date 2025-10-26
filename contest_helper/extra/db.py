@@ -186,7 +186,7 @@ class Table:
 
 # ---- DataBase ----------------------------------------------------------------
 
-class DataBase:
+class DataBase(Value[Dict[str, List[Dict[str, Any]]]]):
     """Holds multiple tables and generates them in dependency order.
 
     Supports ForeignKey dependencies between tables.
@@ -194,6 +194,7 @@ class DataBase:
     """
 
     def __init__(self, *tables: Table) -> None:
+        super().__init__(None)
         by_name: Dict[str, Table] = {}
         for t in tables:
             if t.name in by_name:
@@ -232,7 +233,7 @@ class DataBase:
     def generate(self, seed: Optional[int] = None) -> Dict[str, List[Dict[str, Any]]]:
         if seed is not None:
             rd.seed(seed)
-
+        self.data = {}
         order = self._toposort()
         # bind foreign keys progressively, then generate
         for name in order:
@@ -258,6 +259,10 @@ class DataBase:
                         g.bind([row[g.column_name] for row in self.data[name]])
 
         return self.data
+
+    def __call__(self) -> Dict[str, List[Dict[str, Any]]]:
+        """Generate and return the database data to comply with Value interface."""
+        return self.generate()
 
     # convenience accessors
     def table(self, name: str) -> Table:
