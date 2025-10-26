@@ -78,37 +78,42 @@ ch-combine my_problem --time-limit 2000 --memory-limit 256000000
 
 ## Test Generation Examples
 
+👉 Since version 0.6.0, test input/output is now defined through adapters (`TextInputAdapter` / `BinaryInputAdapter`, etc.) instead of printer functions.
+
 ### 1. Basic Number Generation
 ```python
 from contest_helper import RandomNumber, Generator
+from contest_helper.basic import TextInputAdapter, TextOutputAdapter
 
 # Generate 20 random numbers between 1-100
 generator = Generator(
     tests_generator=RandomNumber(1, 101),
     tests_count=20,
-    input_printer=lambda x: [str(x)],
-    output_printer=lambda x: [str(x**2)]  # Output is input squared
+    input_adapter=TextInputAdapter(),
+    output_adapter=TextOutputAdapter()
 )
 generator.run()
 ```
 
 ### 2. String Manipulation Problem
 ```python
-from contest_helper import RandomWord
+from contest_helper import RandomWord, Generator
+from contest_helper.basic import TextInputAdapter, TextOutputAdapter
 
 # Generate 15 random words (3-10 chars) and reverse them
 generator = Generator(
     tests_generator=RandomWord(),
     tests_count=15,
-    input_printer=lambda x: [x],
-    output_printer=lambda x: [x[::-1]]  # Reversed string
+    input_adapter=TextInputAdapter(),
+    output_adapter=TextOutputAdapter()
 )
 generator.run()
 ```
 
 ### 3. Matrix Generation
 ```python
-from contest_helper import RandomNumber, RandomList
+from contest_helper import RandomNumber, RandomList, Generator
+from contest_helper.basic import TextInputAdapter, TextOutputAdapter
 
 # Generate 10 random 3x3 matrices (values 0-9)
 matrix_gen = RandomList(
@@ -119,15 +124,16 @@ matrix_gen = RandomList(
 generator = Generator(
     tests_generator=matrix_gen,
     tests_count=10,
-    input_printer=lambda m: [f"{n}" for row in m for n in row],
-    output_printer=lambda m: [str(sum(sum(row) for row in m))]  # Sum of all elements
+    input_adapter=TextInputAdapter(),
+    output_adapter=TextOutputAdapter()
 )
 generator.run()
 ```
 
 ### 4. Graph Problem (Edges List)
 ```python
-from contest_helper import RandomNumber, RandomDict
+from contest_helper import RandomNumber, RandomDict, Generator
+from contest_helper.basic import TextOutputAdapter, TextInputAdapter
 
 # Generate graphs with 5-10 nodes and random edges
 graph_gen = RandomDict(
@@ -136,24 +142,26 @@ graph_gen = RandomDict(
     length=RandomNumber(5, 11)  # Node count
 )
 
-def print_graph(g):
-    edges = []
-    for node, neighbors in g.items():
-        edges.extend(f"{node} {n}" for n in neighbors)
-    return edges
+class GraphInputAdapter(TextInputAdapter):
+    def input_lines(self, value):
+        edges = []
+        for node, neighbors in value.items():
+            edges.extend(f"{node} {n}" for n in neighbors)
+        return edges
 
 generator = Generator(
     tests_generator=graph_gen,
     tests_count=5,
-    input_printer=print_graph,
-    output_printer=lambda _: ["1"]  # Dummy output
+    input_adapter=GraphInputAdapter(),
+    output_adapter=TextOutputAdapter()
 )
 generator.run()
 ```
 
 ### 5. Combined Generators
 ```python
-from contest_helper import CombineValues, RandomWord, RandomNumber
+from contest_helper import CombineValues, RandomWord, RandomNumber, Generator
+from contest_helper.basic import TextInputAdapter, TextOutputAdapter
 
 # Generate tests with multiple values per case
 combined_gen = CombineValues([
@@ -165,8 +173,8 @@ combined_gen = CombineValues([
 generator = Generator(
     tests_generator=combined_gen,
     tests_count=8,
-    input_printer=lambda vals: [str(v) for v in vals],
-    output_printer=lambda vals: [str(len(vals[0]) * vals[1])]  # String length repeated N times
+    input_adapter=TextInputAdapter(),
+    output_adapter=TextOutputAdapter()
 )
 generator.run()
 ```
@@ -176,6 +184,7 @@ generator.run()
 ### 1. Basic Grouped Tests
 ```python
 from contest_helper import RandomNumber, Generator
+from contest_helper.basic import TextInputAdapter, TextOutputAdapter
 
 # Different groups with different number ranges
 generator = Generator(
@@ -189,15 +198,16 @@ generator = Generator(
         'medium': 3,   # 3 medium tests
         'large': 2     # 2 large tests
     },
-    input_printer=lambda x: [str(x)],
-    output_printer=lambda x: [str(x % 10)]  # Last digit
+    input_adapter=TextInputAdapter(),
+    output_adapter=TextOutputAdapter()
 )
 generator.run()
 ```
 
 ### 2. String Problems with Difficulty Groups
 ```python
-from contest_helper import RandomWord, RandomSentence
+from contest_helper import RandomWord, RandomSentence, Generator
+from contest_helper.basic import TextInputAdapter, TextOutputAdapter
 
 generator = Generator(
     tests_generator={
@@ -210,15 +220,16 @@ generator = Generator(
         'medium': 2,
         'hard': 1
     },
-    input_printer=lambda x: [x],
-    output_printer=lambda x: [x.upper()]  # Convert to uppercase
+    input_adapter=TextInputAdapter(),
+    output_adapter=TextOutputAdapter()
 )
 generator.run()
 ```
 
 ### 3. Graph Problems with Increasing Complexity
 ```python
-from contest_helper import RandomDict, RandomNumber, RandomList
+from contest_helper import RandomDict, RandomNumber, RandomList, Generator
+from contest_helper.basic import TextInputAdapter, TextOutputAdapter
 
 generator = Generator(
     tests_generator={
@@ -237,15 +248,16 @@ generator = Generator(
         'trees': 3,
         'graphs': 2
     },
-    input_printer=lambda g: [f"{k}:{','.join(map(str,v))}" for k,v in g.items()],
-    output_printer=lambda _: ["1"]  # Dummy output
+    input_adapter=TextInputAdapter(),
+    output_adapter=TextOutputAdapter()
 )
 generator.run()
 ```
 
 ### 4. Combined Groups with Custom Logic
 ```python
-from contest_helper import CombineValues, RandomWord, RandomNumber
+from contest_helper import CombineValues, RandomWord, RandomNumber, Generator
+from contest_helper.basic import TextInputAdapter, TextOutputAdapter
 
 generator = Generator(
     tests_generator={
@@ -261,12 +273,8 @@ generator = Generator(
         'strings': 3,
         'mixed': 2
     },
-    input_printer=lambda x: [str(x) if isinstance(x, int) else x],
-    output_printer=lambda x: (
-        [str(x*2)] if isinstance(x, int) 
-        else [x[::-1]] if isinstance(x, str)
-        else [x[0]*x[1]]  # string repeated N times
-    )
+    input_adapter=TextInputAdapter(),
+    output_adapter=TextOutputAdapter()
 )
 generator.run()
 ```
@@ -274,6 +282,7 @@ generator.run()
 ### 5. Scientific Formatting with Groups
 ```python
 from contest_helper import RandomNumber, Generator
+from contest_helper.basic import TextInputAdapter, TextOutputAdapter
 import math
 
 generator = Generator(
@@ -285,8 +294,8 @@ generator = Generator(
         'precision_low': 3,
         'precision_high': 2
     },
-    input_printer=lambda x: [f"{x:.3f}"],
-    output_printer=lambda x: [f"{math.sin(x):.5e}"]  # Scientific notation
+    input_adapter=TextInputAdapter(),
+    output_adapter=TextOutputAdapter()
 )
 generator.run()
 ```

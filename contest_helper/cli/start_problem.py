@@ -7,6 +7,7 @@ Automates creation of standard problem components including statements, generato
 """
 
 import argparse
+import re
 from os import mkdir, path
 from contest_helper.cli.utils import load_template
 
@@ -36,12 +37,22 @@ def main():
         action="store_true",
         help='include a checker.py file for solution validation'
     )
+    parser.add_argument(
+        '--input-type', '-i',
+        default='text', choices=['text', 'binary'],
+        help='input data type in the generated generator template (text|binary)'
+    )
+    parser.add_argument(
+        '--output-type', '-o',
+        default='text', choices=['text', 'binary'],
+        help='output data type in the generated generator template (text|binary)'
+    )
     args = parser.parse_args()
 
-    process(args.directory, args.language, args.checker)
+    process(args.directory, args.language, args.checker, args.input_type, args.output_type)
 
 
-def process(directory, language, need_checker=False):
+def process(directory, language, need_checker=False, input_type='text', output_type='text'):
     """
     Creates problem directory structure with template files.
 
@@ -49,6 +60,8 @@ def process(directory, language, need_checker=False):
         directory (str): Path to the problem directory
         language (str): Language code for statement ('en' or 'ru')
         need_checker (bool): Whether to include checker template
+        input_type (str): Input adapter type ('text' or 'binary')
+        output_type (str): Output adapter type ('text' or 'binary')
 
     Raises:
         FileExistsError: If target directory already exists
@@ -62,9 +75,32 @@ def process(directory, language, need_checker=False):
         with open(path.join(directory, 'statement.md'), 'w') as file:
             file.write(load_template(path.join('statements', f'{language}.md')))
 
-        # Test case generator template
+        # Test case generator template with adapter substitution
+        gen_tpl = load_template('generator.py')
+
+        # Decide adapter class instantiations
+        input_adapter_str = 'MyInputAdapter()' if input_type == 'text' else 'MyBinInputAdapter()'
+        output_adapter_str = 'MyOutputAdapter()' if output_type == 'text' else 'MyBinOutputAdapter()'
+
+        gen_tpl = gen_tpl.replace('__INPUT_ADAPTER__', input_adapter_str)
+        gen_tpl = gen_tpl.replace('__OUTPUT_ADAPTER__', output_adapter_str)
+
+        if input_type == 'text':
+            # Remove MyBinInputAdapter class block
+            gen_tpl = re.sub(r'class MyBinInputAdapter[\s\S]+?(?=class )', '', gen_tpl)
+        else:
+            # Remove MyInputAdapter class block
+            gen_tpl = re.sub(r'class MyInputAdapter[\s\S]+?(?=class )', '', gen_tpl)
+
+        if output_type == 'text':
+            # Remove MyBinOutputAdapter class block, keep 'def validator' and subsequent code intact
+            gen_tpl = re.sub(r'class MyBinOutputAdapter[\s\S]+?(?=def validator)', '', gen_tpl)
+        else:
+            # Remove MyOutputAdapter class block
+            gen_tpl = re.sub(r'class MyOutputAdapter[\s\S]+?(?=class )', '', gen_tpl)
+
         with open(path.join(directory, 'generator.py'), 'w') as file:
-            file.write(load_template('generator.py'))
+            file.write(gen_tpl)
 
         # Problem metadata
         with open(path.join(directory, 'meta.json'), 'w') as file:
