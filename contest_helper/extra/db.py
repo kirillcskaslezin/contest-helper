@@ -153,18 +153,12 @@ class Table:
                     if value is not None and spec.transform is not None:
                         value = spec.transform(value)
 
-                # Enforce uniqueness with retry (bounded attempts)
+                # Enforce uniqueness with unbounded retry (skip None values)
                 if col in unique_trackers and value is not None:
-                    attempts = 0
-                    while value in unique_trackers[col] and attempts < 1000:
+                    while value in unique_trackers[col]:
                         value = spec.generator()
                         if value is not None and spec.transform is not None:
                             value = spec.transform(value)
-                        attempts += 1
-                    if value in unique_trackers[col]:
-                        raise RuntimeError(
-                            f"Failed to generate unique value for column '{col}' in table '{self.name}'"
-                        )
                     unique_trackers[col].add(value)
 
                 row[col] = value
