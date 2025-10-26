@@ -4,6 +4,12 @@ from dataclasses import dataclass
 from typing import Any, Callable, Dict, Iterable, List, Optional, Set, Tuple, Union
 import csv
 import random as rd
+import io
+import sqlite3
+from pathlib import Path
+import os
+import tempfile
+from ..basic import BinaryInputAdapter, BinaryOutputAdapter, SampleData
 
 # Reuse value generators from the core module
 # Adjust the import path if this file lives in a different package structure
@@ -270,3 +276,133 @@ class DataBase(Value[Dict[str, List[Dict[str, Any]]]]):
 
     def rows(self, name: str) -> List[Dict[str, Any]]:
         return self.data.get(name, [])
+
+
+# ---- SQLiteConnectionDataBase -------------------------------------------------
+
+class SQLiteConnectionDataBase(DataBase):
+    """Generates data with DataBase and exposes a populated sqlite3.Connection.
+
+    By default uses an in-memory database (":memory:").
+    """
+
+    def __init__(self, *tables: Table, database: str = ":memory:") -> None:
+        super().__init__(*tables)
+        self._database = database
+
+    def generate(self, seed: Optional[int] = None) -> sqlite3.Connection:
+        data = super().generate(seed=seed)
+        conn = sqlite3.connect(self._database)
+        cur = conn.cursor()
+        # create tables
+        for name, table in self.tables.items():
+            # infer very simple types from first non-null sample value
+            rows = data.get(name, [])
+            col_types: Dict[str, str] = {}
+            for col, spec in table.columns.items():
+                sample = next((r[col] for r in rows if r.get(col) is not None), None)
+                if isinstance(sample, bool) or isinstance(sample, int):
+                    col_types[col] = "INTEGER"
+                elif isinstance(sample, float):
+                    col_types[col] = "REAL"
+                elif isinstance(sample, (bytes, bytearray, memoryview)):
+                    col_types[col] = "BLOB"
+                else:
+                    col_types[col] = "TEXT"
+
+            col_defs: List[str] = []
+            for col, spec in table.columns.items():
+                d = f"{col} {col_types[col]}"
+                if spec.unique:
+                    d += " UNIQUE"
+                col_defs.append(d)
+
+            fk_defs: List[str] = []
+            for col, spec in table.columns.items():
+                gen = spec.generator
+                if isinstance(gen, ForeignKey):
+                    fk_defs.append(f"FOREIGN KEY({col}) REFERENCES {gen.table_name}({gen.column_name})")
+
+            ddl = f"CREATE TABLE {name} (" + ", ".join(col_defs + fk_defs) + ")"
+            cur.execute(ddl)
+
+            # insert rows
+            if rows:
+                cols = list(table.columns.keys())
+                placeholders = ",".join(["?"] * len(cols))
+                sql = f"INSERT INTO {name} (" + ",".join(cols) + ") VALUES (" + placeholders + ")"
+                values = [tuple(r.get(c) for c in cols) for r in rows]
+                cur.executemany(sql, values)
+
+        conn.commit()
+        cur.close()
+        return conn
+
+    def __call__(self) -> sqlite3.Connection:
+        return self.generate()
+
+
+# ---- SQLite connection I/O Adapters -----------------------------------------
+
+class SQLiteConnInputAdapter(BinaryInputAdapter):
+    """Input adapter for SQLite databases that may be provided as a connection or file.
+
+    Accepts: sqlite3.Connection, file path, bytes/BytesIO, SQLiteConnectionDataBase or DataBase.
+    Writes a .sqlite binary file as test input.
+    """
+
+    def parse_sample(self, path: str) -> SampleData:
+        with open(path, 'rb') as f:
+            raw = f.read()
+        # For convenience, parsed holds a live connection loaded from the file
+        conn = sqlite3.connect(path)
+        return SampleData(raw_bytes=raw, parsed=conn)
+
+    def input_bytes(self, data: Any):
+        yield self._to_bytes(data)
+
+    @staticmethod
+    def _to_bytes(data: Any) -> bytes:
+        # bytes-like
+        if isinstance(data, (bytes, bytearray, memoryview)):
+            return bytes(data)
+        # BytesIO
+        if isinstance(data, io.BytesIO):
+            return data.getvalue()
+        # File path
+        if isinstance(data, (str, Path)):
+            with open(data, 'rb') as f:
+                return f.read()
+        # sqlite3.Connection -> dump to bytes via temporary file and backup
+        if isinstance(data, sqlite3.Connection):
+            fd, tmp_path = tempfile.mkstemp(prefix='contest_helper_', suffix='.sqlite')
+            os.close(fd)
+            try:
+                dest = sqlite3.connect(tmp_path)
+                data.backup(dest)
+                dest.close()
+                with open(tmp_path, 'rb') as f:
+                    return f.read()
+            finally:
+                try:
+                    os.remove(tmp_path)
+                except OSError:
+                    pass
+        # SQLiteConnectionDataBase -> get connection and serialize
+        if isinstance(data, SQLiteConnectionDataBase):
+            return SQLiteConnInputAdapter._to_bytes(data())
+        # Plain DataBase -> build a SQLite connection and serialize
+        if isinstance(data, DataBase):
+            conn = SQLiteConnectionDataBase(*data.tables.values())()
+            return SQLiteConnInputAdapter._to_bytes(conn)
+        raise TypeError("Unsupported input type for SQLiteConnInputAdapter")
+
+
+class SQLiteConnOutputAdapter(BinaryOutputAdapter):
+    """Output adapter for SQLite databases.
+
+    Accepts the same types as SQLiteConnInputAdapter and writes .sqlite binary output files.
+    """
+
+    def output_bytes(self, result: Any):
+        yield SQLiteConnInputAdapter._to_bytes(result)
