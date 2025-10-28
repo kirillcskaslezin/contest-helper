@@ -29,12 +29,15 @@ class ColumnSpec:
         nullable:  If True, some values may be None with probability `null_prob`.
         null_prob: Probability of generating None when `nullable=True`.
         transform: Optional post-processing function applied to non-null values.
+        column_type: Optional; if provided, forces the SQLite column type for this column
+            (e.g., 'INTEGER', 'REAL', 'TEXT', 'BLOB', etc.).
     """
     generator: Union[Value[Any], Callable[[], Any]]
     unique: bool = False
     nullable: bool = False
     null_prob: float = 0.0
     transform: Optional[Callable[[Any], Any]] = None
+    column_type: Optional[str] = None
 
     def normalized(self) -> "ColumnSpec":
         gen = self.generator
@@ -46,6 +49,7 @@ class ColumnSpec:
             nullable=self.nullable,
             null_prob=self.null_prob,
             transform=self.transform,
+            column_type=self.column_type,
         )
 
 
@@ -290,19 +294,22 @@ class SQLiteConnectionDataBase(DataBase):
         cur = conn.cursor()
         # create tables
         for name, table in self.tables.items():
-            # infer very simple types from first non-null sample value
+            # infer very simple types from first non-null sample value, unless column_type is provided
             rows = data.get(name, [])
             col_types: Dict[str, str] = {}
             for col, spec in table.columns.items():
-                sample = next((r[col] for r in rows if r.get(col) is not None), None)
-                if isinstance(sample, bool) or isinstance(sample, int):
-                    col_types[col] = "INTEGER"
-                elif isinstance(sample, float):
-                    col_types[col] = "REAL"
-                elif isinstance(sample, (bytes, bytearray, memoryview)):
-                    col_types[col] = "BLOB"
+                if spec.column_type is not None:
+                    col_types[col] = spec.column_type
                 else:
-                    col_types[col] = "TEXT"
+                    sample = next((r[col] for r in rows if r.get(col) is not None), None)
+                    if isinstance(sample, bool) or isinstance(sample, int):
+                        col_types[col] = "INTEGER"
+                    elif isinstance(sample, float):
+                        col_types[col] = "REAL"
+                    elif isinstance(sample, (bytes, bytearray, memoryview)):
+                        col_types[col] = "BLOB"
+                    else:
+                        col_types[col] = "TEXT"
 
             col_defs: List[str] = []
             for col, spec in table.columns.items():
