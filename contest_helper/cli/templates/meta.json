@@ -99,7 +99,7 @@
       },
       "env": {},
       "checkerFiles": null,
-      "compilerId": null,
+      "compilerId": "python3_13",
       "isScoring": null,
       "checkerId": "cmp_file",
       "eps": null,
