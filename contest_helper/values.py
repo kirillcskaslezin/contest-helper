@@ -297,12 +297,13 @@ class RandomSentence(RandomWord):
         self._max_length_ = max_length if isinstance(max_length, Value) else Value(max_length)
         self._min_word_length_ = min_word_length if isinstance(min_word_length, Value) else Value(min_word_length)
         self._max_word_length_ = max_word_length if isinstance(max_word_length, Value) else Value(max_word_length)
+        self._register_ = register
         self._word_generator_ = RandomWord(
             sequence,
             self._min_word_length_,
-            self._max_word_length_
+            self._max_word_length_,
+            self._register_
         )
-        self._register_ = register
         self._sep_ = sep if isinstance(sep, Value) else Value(sep)
         self._end_ = end if isinstance(end, Value) else Value(end)
 
