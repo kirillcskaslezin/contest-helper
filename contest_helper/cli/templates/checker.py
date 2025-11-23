@@ -78,6 +78,7 @@ def main():
 
         # Execute validation
         check(*data)
+        print('Ok!')
         sys.exit(OK)
 
     except IOError as error:
