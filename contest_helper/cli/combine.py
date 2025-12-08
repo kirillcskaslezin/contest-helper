@@ -80,10 +80,10 @@ def main():
                       help='Input file name')
     parser.add_argument('--output-file',
                       help='Output file name')
-    parser.add_argument('--redirect-stdin', action='store_true',
-                      help='Enable stdin redirection')
-    parser.add_argument('--redirect-stdout', action='store_true',
-                      help='Enable stdout redirection')
+    parser.add_argument('--disable-stdin', action='store_false', dest='redirect_stdin',
+                      help='Disable stdin redirection')
+    parser.add_argument('--disable-stdout', action='store_false', dest='redirect_stdout',
+                      help='Disable stdout redirection')
 
     # Section visibility arguments
     parser.add_argument('--hide-limits', action='store_false', dest='show_limits',
