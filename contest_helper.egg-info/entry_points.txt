@@ -6,3 +6,4 @@ ch-make-postprocessor = contest_helper.cli.make_postprocessor:main
 ch-start-problem = contest_helper.cli.start_problem:main
 ch-statement-preview = contest_helper.cli.statement_preview:main
 ch-test = contest_helper.cli.test:main
+ch-typograf = contest_helper.cli.typograf:main

@@ -22,6 +22,7 @@ contest_helper/cli/make_postprocessor.py
 contest_helper/cli/start_problem.py
 contest_helper/cli/statement_preview.py
 contest_helper/cli/test.py
+contest_helper/cli/typograf.py
 contest_helper/cli/utils.py
 contest_helper/cli/templates/Makefile
 contest_helper/cli/templates/build.sh
@@ -31,6 +32,10 @@ contest_helper/cli/templates/compilers.csv
 contest_helper/cli/templates/generator.py
 contest_helper/cli/templates/meta.json
 contest_helper/cli/templates/postprocessor.py
+contest_helper/cli/templates/__pycache__/check.cpython-311.pyc
+contest_helper/cli/templates/__pycache__/checker.cpython-311.pyc
+contest_helper/cli/templates/__pycache__/generator.cpython-311.pyc
+contest_helper/cli/templates/__pycache__/postprocessor.cpython-311.pyc
 contest_helper/cli/templates/samples/en.md
 contest_helper/cli/templates/samples/ru.md
 contest_helper/cli/templates/statements/en.md
@@ -38,3 +43,4 @@ contest_helper/cli/templates/statements/ru.md
 contest_helper/extra/__init__.py
 contest_helper/extra/datetime.py
 contest_helper/extra/db.py
+tests/test_typograf.py

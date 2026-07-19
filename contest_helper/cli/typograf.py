@@ -16,7 +16,16 @@ from pathlib import Path
 
 TYPOGRAF_URL = "http://typograf.artlebedev.ru/webservices/typograf.asmx"
 SOAP_ACTION = "http://typograf.artlebedev.ru/webservices/ProcessText"
-PLACEHOLDER_PATTERN = re.compile(r"\$\$[\s\S]+?\$\$|\$[^$\n]+\$|`[^`\n]*`")
+PLACEHOLDER_PATTERN = re.compile(
+    r"^[ \t]*```[^\r\n]*(?:\r?\n|$)[\s\S]*?"
+    r"(?:^[ \t]*```[ \t]*(?:\r?\n|$)|\Z)|"
+    r"^[ \t]*~~~[^\r\n]*(?:\r?\n|$)[\s\S]*?"
+    r"(?:^[ \t]*~~~[ \t]*(?:\r?\n|$)|\Z)|"
+    r"^[ \t]*(?:[-+*]|\d+[.)])[ \t]+(?:\[[ xX]\][ \t]+)?|"
+    r"\A(?:[ \t]*\r?\n)+|\r?\n(?:[ \t]*\r?\n)+|"
+    r"\$\$[\s\S]+?\$\$|\$[^$\n]+\$|`[^`\n]*`",
+    re.MULTILINE,
+)
 RESULT_PATTERN = re.compile(r"<ProcessTextResult>([\s\S]*?)</ProcessTextResult>")
 
 
