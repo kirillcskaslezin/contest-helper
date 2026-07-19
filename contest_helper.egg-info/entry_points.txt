@@ -1,0 +1,8 @@
+[console_scripts]
+ch-combine = contest_helper.cli.combine:main
+ch-compilers = contest_helper.cli.compilers:main
+ch-make-checker = contest_helper.cli.make_checker:main
+ch-make-postprocessor = contest_helper.cli.make_postprocessor:main
+ch-start-problem = contest_helper.cli.start_problem:main
+ch-statement-preview = contest_helper.cli.statement_preview:main
+ch-test = contest_helper.cli.test:main
